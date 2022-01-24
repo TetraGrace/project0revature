@@ -1,4 +1,4 @@
-package jbdc
+package jdbc
 
 import java.io.File
 import java.io.PrintWriter
