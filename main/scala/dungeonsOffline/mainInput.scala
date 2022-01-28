@@ -1,115 +1,14 @@
+package dungeonsOffline
 import scala.io.Source
 import scala.io.StdIn.readLine
+import dungeon._
 import org.apache.spark.sql.execution.SQLExecution
 import java.sql.DriverManager
 import java.sql.Connection
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Map
 import authenticate._
- 
-class Monster(rawid:Int,rawname:String,rawhealth:Int,rawattack:Int, rawdefense:Int, diff:String){
-    //the Monster Class, for all your Monster Needs.
-    val name = rawname;
-    val id = rawid //This is a VAL cause the id of the monster should never change.
-    var health = rawhealth
-    var attack = rawattack
-    var defense = rawdefense
-    var cr = diff
-}
-
-class Generator(rawId:Int, rawname:String,rawrate:Double){
-    //Generators, AKA Passive Energy Generations
-    val id = rawId
-    val name = rawname
-    var rate = rawrate
-}
-
-class Dungeon(rawenergy:Double, rawmonsters:Monster, generator:Generator){
-    var energy = rawenergy
-    //monster mapped to number of monsters
-    var monsters = Map[Monster, Int](rawmonsters->1)
-    //generators mapped to number of gnerators, this saves me from having huge lists
-    var gens = Map[Generator, Int](generator-> 1)
-
-    
-}
-
-class Player(user:String, uid:Int){
-    private var name = user
-    private var id = uid
-    private var dungeon:Dungeon = null;
-
-    def setUser(temp:String): Unit = {
-        name = temp;
-    }
-
-    def getUser():String = {
-        return name;
-    }
-
-    def setId(tempid:Int): Unit = {
-        id = tempid
-    }
-    def getId():Int = {
-        return id;
-    }
-    def createDungeon(mon:Monster, gen:Generator): Unit={
-        dungeon = new Dungeon(0, mon,gen)
-    }
-
-    def createDungeon(mon:Map[Monster, Int], gen:Map[Generator, Int], en:Double):Unit = {
-        createDungeon(null,null)
-        dungeon.monsters = mon
-        dungeon.gens = gen
-        dungeon.energy = en        
-    }
-
-    def formatMonstersForSaving():String= {
-        var tempDun = ""
-        var temp = dungeon.monsters.foreach((x:(Monster, Int)) => tempDun += (x._1.id.toString +"," + x._2.toString + "&"))
-        return tempDun
-    }
-    def formatGeneratorForSaving():String={
-        var tempDun = ""
-        var temp = dungeon.gens.foreach((x:(Generator, Int)) => tempDun += (x._1.id.toString +"," + x._2.toString + "&"))
-        return tempDun
-    }
-    def getEnergyLevel(): Double = {
-        return dungeon.energy
-    }
-    def getDungeonStatus():String = {
-        //returns a preformatted String toprint out a stus of the dungeon in the console.
-        var finalOut = "+-----------------------------------+\n"
-        finalOut +=    "| Monsters:                         |\n"
-        
-        var mName = "| "
-        dungeon.monsters.foreach(t => (mName += t._1.name + ": " + t._2.toString()))
-        while(mName.length < 36) {
-            mName += " "
-        }
-        mName +="|\n"
-        finalOut += mName;
-        finalOut +=    "| Generators:                       |\n"
-        mName = "| "
-        dungeon.gens.foreach(t => (mName += t._1.name + ": " + t._2.toString()))
-        while(mName.length < 36) {
-            mName += " "
-        }
-        mName +="|\n"
-        finalOut += mName
-        mName = "| Energy: " + getEnergyLevel().toString()
-        while(mName.length < 36) {
-            mName += " "
-        }
-        mName +="|\n"
-        finalOut += mName
-        finalOut += "+-----------------------------------+\n"
-        return finalOut
-    }
-    def tick(){
-        dungeon.energy += 1.5;
-    }
-}
+import player.Player
 
 object mainInput {
     

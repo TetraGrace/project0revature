@@ -1,3 +1,5 @@
+package dungeonsOffline
+
 import org.apache.spark.sql.execution.SQLExecution
 import java.sql.DriverManager
 import java.sql.Connection
